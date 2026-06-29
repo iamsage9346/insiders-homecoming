@@ -146,6 +146,17 @@ function handleMcAction(type) {
       game.results = computeResults()
       game.phase = 'RESULT'
       break
+    case 'reset': // 전체 초기화: 참가자·투표 전부 삭제 후 대기실로
+      participants.clear()
+      socketToParticipant.clear()
+      game.phase = 'LOBBY'
+      game.questionIndex = 0
+      game.firstOpen = false
+      game.finalOpen = false
+      game.reps = null
+      game.results = null
+      io.emit('reset') // 참가자 클라이언트가 로컬 세션을 비우고 입장 화면으로
+      break
     case 'next': // 다음 질문 또는 종료
       if (game.questionIndex + 1 < QUESTIONS.length) {
         game.questionIndex++

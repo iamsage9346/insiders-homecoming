@@ -18,6 +18,7 @@ export default function MC() {
   const [err, setErr] = useState('')
   const [gameState, setGameState] = useState(null)
   const [tally, setTally] = useState({ first: { A: 0, B: 0 }, final: { A: 0, B: 0 }, count: 0 })
+  const [confirmReset, setConfirmReset] = useState(false)
   const pwRef = useRef('')
 
   useEffect(() => {
@@ -111,9 +112,40 @@ export default function MC() {
             </div>
           )}
         </div>
-        <div className="text-right">
-          <div className="text-4xl font-extrabold">{count}</div>
-          <div className="text-slate-400 text-sm">접속 인원</div>
+        <div className="flex items-center gap-6">
+          <div className="text-right">
+            <div className="text-4xl font-extrabold">{count}</div>
+            <div className="text-slate-400 text-sm">접속 인원</div>
+          </div>
+          {confirmReset ? (
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-xs text-amber-400">참가자·투표 모두 삭제할까요?</span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    action('reset')
+                    setConfirmReset(false)
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-sm font-bold"
+                >
+                  예, 초기화
+                </button>
+                <button
+                  onClick={() => setConfirmReset(false)}
+                  className="px-4 py-1.5 rounded-lg bg-slate-600 hover:bg-slate-500 text-sm"
+                >
+                  취소
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setConfirmReset(true)}
+              className="px-3 py-2 rounded-lg border border-slate-600 text-slate-300 text-sm hover:bg-slate-700"
+            >
+              🔄 전체 초기화
+            </button>
+          )}
         </div>
       </header>
 

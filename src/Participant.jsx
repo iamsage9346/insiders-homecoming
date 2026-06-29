@@ -44,12 +44,24 @@ export default function Participant() {
       localStorage.setItem('balanceName', name)
       setJoined(true)
     }
+    function onReset() {
+      // 사회자가 전체 초기화 → 로컬 세션 비우고 입장 화면으로 복귀
+      localStorage.removeItem('balanceId')
+      localStorage.removeItem('balanceName')
+      idRef.current = null
+      nameRef.current = ''
+      lastQ.current = null
+      setMyVotes({ firstVote: null, finalVote: null })
+      setNameInput('')
+      setJoined(false)
+    }
 
     socket.on('connect', onConnect)
     socket.on('disconnect', onDisconnect)
     socket.on('state', onState)
     socket.on('you', onYou)
     socket.on('joined', onJoined)
+    socket.on('reset', onReset)
     if (socket.connected) rejoin()
 
     return () => {
@@ -58,6 +70,7 @@ export default function Participant() {
       socket.off('state', onState)
       socket.off('you', onYou)
       socket.off('joined', onJoined)
+      socket.off('reset', onReset)
     }
   }, [])
 
